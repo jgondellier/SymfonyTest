@@ -1,0 +1,5 @@
+tinymce:
+    # The configurations mirror the TinyMCE attributes.
+    # Learn more about each option in Tiny's documentation: 
+    # https://www.tiny.cloud/docs/tinymce/6/webcomponent-ref/
+    plugins: "a11ychecker advcode advtemplate advlist advtable anchor autocorrect autosave editimage image link linkchecker lists markdown media mediaembed pageembed powerpaste searchreplace table template tinymcespellchecker typography visualblocks wordcount exportpdf exportword"

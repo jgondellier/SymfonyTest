@@ -26,7 +26,4 @@ return [
         'version' => '5.3.3',
         'type' => 'css',
     ],
-    'ckeditor' => [
-        'version' => '4.12.1',
-    ],
 ];
