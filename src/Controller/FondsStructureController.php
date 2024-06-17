@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Knp\Snappy\Pdf as knpSnappyPdf;
+use App\Model\HtmlToDoc;
 
 class FondsStructureController extends AbstractController
 {
@@ -25,7 +26,12 @@ class FondsStructureController extends AbstractController
 
         $form = $this->createFormBuilder($testRichText)
             ->add('name', TextType::class)
-            ->add('content', TinymceType::class)
+            ->add('content', TinymceType::class,[
+                "attr" => [
+                    //"toolbar" => "bold italic underline | bullist numlist",
+                    "plugins" => "code",
+                ],
+            ])
             ->add('save', SubmitType::class, ['label' => 'Save '])
             ->getForm();
 
@@ -34,15 +40,37 @@ class FondsStructureController extends AbstractController
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $testRichText = $form->getData();
+            $htd = new HtmlToDoc();
+
+            $htd->createDoc($testRichText->getContent(), "convertHtmlToDoc.doc");
+
 
             if (file_exists(self::FILE_TO_PDF)) {
                 unlink(self::FILE_TO_PDF);
             }
 
-            /*$knpSnappyPdf->generateFromHtml(
-                $testRichText->getContent(),
+            $knpSnappyPdf->setOption('enable-forms',true);
+            $knpSnappyPdf->generateFromHtml(
+                '<!DOCTYPE html>
+<html>
+ <body>
+  <form>
+    <input type="text" width="500px" name="test" />
+    <br />
+    <br />
+    <input type="checkbox" name="cb1"/>Option 1
+    <input type="checkbox" name="cb2"/>Option 2
+    <input type="checkbox" name="cb2"/>Option 3
+    <br />
+    <br />
+    <input type="radio" name="rb1"/>Radio Option 1
+    <input type="radio" name="rb1"/>Radio Option 2
+    <input type="radio" name="rb1"/>Radio Option 3
+  </form>
+ </body>
+</html>',
                 self::FILE_TO_PDF
-            );*/
+            );
 
 
             // ... perform some action, such as saving the task to the database
